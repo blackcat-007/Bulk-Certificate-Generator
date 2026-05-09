@@ -21,6 +21,15 @@ export default function HomePage() {
       height: 0,
     });
     const [loading, setLoading] =useState(false);
+   
+const [progress, setProgress] =useState(0);
+
+
+const [generatedCount, setGeneratedCount] =
+  useState(0);
+
+const [totalCertificates, setTotalCertificates] =
+  useState(0);
   const [fields, setFields] = useState([
     {
       id: 1,
@@ -98,13 +107,53 @@ export default function HomePage() {
     setFields(updated);
   };
 
-  const handleGenerate = async () => {
+ const handleGenerate = async () => {
 
   if (!certificate) return;
 
   try {
 
     setLoading(true);
+
+    setProgress(0);
+
+    setGeneratedCount(0);
+
+    setTotalCertificates(
+      excelData.length
+    );
+
+    let current = 0;
+
+    let generated = 0;
+
+    const interval = setInterval(() => {
+
+      current += Math.random() * 8;
+
+      if (current >= 90) {
+        current = 90;
+      }
+
+      generated += Math.floor(
+        Math.random() * 5
+      );
+
+      if (
+        generated >=
+        excelData.length
+      ) {
+        generated =
+          excelData.length;
+      }
+
+      setGeneratedCount(generated);
+
+      setProgress(
+        Math.floor(current)
+      );
+
+    }, 400);
 
     const formData = new FormData();
 
@@ -138,30 +187,50 @@ export default function HomePage() {
 
     const blob = await res.blob();
 
-    const url =
-      window.URL.createObjectURL(blob);
+    clearInterval(interval);
 
-    const a =
-      document.createElement("a");
+    setGeneratedCount(
+      excelData.length
+    );
 
-    a.href = url;
+    setProgress(100);
 
-    a.download =
-      "certificates.zip";
+    setTimeout(() => {
 
-    a.click();
+      const url =
+        window.URL.createObjectURL(blob);
+
+      const a =
+        document.createElement("a");
+
+      a.href = url;
+
+      a.download =
+        "certificates.zip";
+
+      a.click();
+
+      setLoading(false);
+
+      setProgress(0);
+
+      setGeneratedCount(0);
+
+    }, 700);
 
   } catch (err) {
 
     console.error(err);
 
+    setLoading(false);
+
+    setProgress(0);
+
+    setGeneratedCount(0);
+
     alert(
       "Failed to generate certificates"
     );
-
-  } finally {
-
-    setLoading(false);
   }
 };
   return (
@@ -261,7 +330,7 @@ backdrop-blur-2xl
     gap-3
     ">
 
-      {/* PREVIEW BUTTON */}
+      {/* PREVIEW BUTTON 
       <button
         className="
         hidden md:flex
@@ -277,44 +346,159 @@ backdrop-blur-2xl
         "
       >
         Preview
-      </button>
+      </button>*/}
 
       {/* GENERATE BUTTON */}
-    <button
+ <button
   onClick={handleGenerate}
   disabled={loading}
   className="
-  px-6 md:px-8
-  py-3
-  rounded-2xl
-  bg-linear-to-r
-  from-cyan-500
-  to-blue-600
+  relative
+  overflow-hidden
+  min-w-64
+  h-20
+  rounded-xl
+  border border-cyan-400/20
+  bg-cyan-950/30
+  hover:bg-cyan-800/50
+  shadow-[0_0_40px_rgba(34,211,238,0.12)]
   transition-all duration-300
-  font-semibold
-  shadow-xl shadow-cyan-500/20
-  disabled:opacity-60
   disabled:cursor-not-allowed
-  flex items-center gap-3
+  group
   "
 >
 
-  {loading && (
+  {/* LIQUID FILL */}
+  <div
+    className="
+    absolute
+    bottom-0
+    left-0
+    w-full
+    bg-linear-to-t
+    from-cyan-500
+    via-blue-500
+    to-cyan-300
+    transition-all duration-500
+    "
+    style={{
+      height: `${progress}%`,
+    }}
+  >
 
+    {/* WAVE 1 */}
     <div className="
-    h-5 w-5
-    border-2
-    border-white/30
-    border-t-white
-    rounded-full
-    animate-spin
+    absolute
+    -top-5
+    left-[-50%]
+    w-[200%]
+    h-10
+    bg-white/20
+    rounded-[100%]
+    blur-xl
+    animate-waveSlow
     " />
 
-  )}
+    {/* WAVE 2 */}
+    <div className="
+    absolute
+    -top-2.5
+    left-[-40%]
+    w-[180%]
+    h-7.5
+    bg-cyan-100/20
+    rounded-[100%]
+    blur-lg
+    animate-waveFast
+    " />
 
-  {loading
-    ? "Generating..."
-    : "Generate"}
+  </div>
+
+  {/* SHINE */}
+  <div className="
+  absolute
+  inset-0
+  bg-linear-to-r
+  from-transparent
+  via-white/5
+  to-transparent
+  -translate-x-full
+  group-hover:translate-x-full
+  transition-all duration-1000
+  " />
+
+  {/* CONTENT */}
+  <div className="
+  relative
+  z-10
+  flex
+  flex-col
+  items-center
+  justify-center
+  h-full
+  px-6
+  ">
+
+    {!loading ? (
+
+      <>
+        <span className="
+        text-white
+        font-bold
+        text-md
+        tracking-wide
+        ">
+          Generate Certificates
+        </span>
+
+        <span className="
+        text-slate-400
+        text-xs
+        mt-1
+        ">
+          Bulk PDF Export
+        </span>
+      </>
+
+    ) : (
+
+      <>
+        <span className="
+        text-white
+        font-bold
+        text-md
+        tracking-wide
+        ">
+          Generating...
+        </span>
+
+        <span className="
+        text-cyan-100
+        text-sm
+        mt-1
+        ">
+
+          {generatedCount} / {totalCertificates}
+          {" "}
+          Certificates
+
+        </span>
+
+        <span className="
+        text-white/90
+        text-xs
+        mt-1
+        font-medium
+        ">
+
+          {progress}%
+
+        </span>
+      </>
+
+    )}
+
+  </div>
 
 </button>
 

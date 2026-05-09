@@ -43,15 +43,38 @@ body {
     transform: translateX(-25%);
   }
 
-  50% {
-    transform: translateX(0%);
-  }
-
   100% {
     transform: translateX(25%);
   }
 }
 
 .animate-wave {
-  animation: wave 1.8s infinite linear;
+  animation: wave 2s linear infinite;
+}
+@keyframes waveSlow {
+  0% {
+    transform: translateX(-20%);
+  }
+
+  100% {
+    transform: translateX(20%);
+  }
+}
+
+@keyframes waveFast {
+  0% {
+    transform: translateX(20%);
+  }
+
+  100% {
+    transform: translateX(-20%);
+  }
+}
+
+.animate-waveSlow {
+  animation: waveSlow 4s linear infinite;
+}
+
+.animate-waveFast {
+  animation: waveFast 2.5s linear infinite;
 }
