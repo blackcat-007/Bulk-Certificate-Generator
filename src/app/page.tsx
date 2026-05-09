@@ -5,6 +5,7 @@ import { parseExcel } from "@/lib/excel";
 import { detectNameColumn } from "@/lib/detectNameColumn";
 import { formatName } from "@/lib/formatName";
 import CertificateEditor from "@/components/CertificateEditor";
+import { Span } from "next/dist/trace";
 
 export default function HomePage() {
   const [certificate, setCertificate] =
@@ -317,8 +318,11 @@ backdrop-blur-2xl
     ">
       Upload certificate templates, drag and position fields,
       customize fonts and colors, and generate certificates instantly.
+     
     </p>
-
+    <span className="text-slate-400 text-sm md:text-base max-w-xl leading-relaxed">
+      generate upto 200 certificates in bulk with a single click.
+    </span>
       </div>
 
     </div>
@@ -547,6 +551,9 @@ backdrop-blur-2xl
 
                 <span className="text-sm text-slate-300 text-center">
                   Upload Certificate Template
+                  <p className="text-xs text-slate-400/50 text-center">
+                    (JPG, JPEG, PNG) OF 5MB OR LESS
+                  </p>
                 </span>
 
                 <input
@@ -556,9 +563,14 @@ backdrop-blur-2xl
                   onChange={(e) => {
                     const file =
                       e.target.files?.[0];
+                    if (!file) return;
 
-                    if (file)
-                      setCertificate(file);
+                    if (file.size > 5 * 1024 * 1024) {
+                      alert("Image too large");
+                      return;
+                    }
+
+                    setCertificate(file);
                   }}
                 />
 
@@ -586,6 +598,9 @@ backdrop-blur-2xl
 
                 <span className="text-sm text-slate-300 text-center">
                   Upload Excel File
+                  <p className="text-xs text-slate-400/50 text-center">
+                    (XLSX, XLS) OF MAX DATA 200 ROWS
+                  </p>
                 </span>
 
                 <input

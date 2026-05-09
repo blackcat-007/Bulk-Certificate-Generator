@@ -36,27 +36,31 @@ export default function CertificateEditor({
     >
 
       {/* CENTER GUIDES */}
-      <div className="
-      absolute
-      left-1/2
-      top-0
-      w-px
-      h-full
-      bg-red-500/30
-      pointer-events-none
-      z-20
-      " />
+      <div
+        className="
+        absolute
+        left-1/2
+        top-0
+        w-px
+        h-full
+        bg-red-500/30
+        pointer-events-none
+        z-20
+        "
+      />
 
-      <div className="
-      absolute
-      top-1/2
-      left-0
-      h-px
-      w-full
-      bg-red-500/30
-      pointer-events-none
-      z-20
-      " />
+      <div
+        className="
+        absolute
+        top-1/2
+        left-0
+        h-px
+        w-full
+        bg-red-500/30
+        pointer-events-none
+        z-20
+        "
+      />
 
       {/* IMAGE */}
       <img
@@ -77,113 +81,123 @@ export default function CertificateEditor({
         h-auto
         object-contain
         rounded-2xl
+        block
         "
       />
 
       {/* FIELDS */}
-      {fields.map((field, index) => (
+   {/* FIELDS */}
+{fields.map((field, index) => (
 
-        <Rnd
-          key={field.id}
+  <Rnd
+    key={field.id}
 
-          size={{
-            width: field.width,
-            height: field.height,
-          }}
+    bounds="parent"
 
-          position={{
-            x: field.x,
-            y: field.y,
-          }}
+    dragGrid={[1, 1]}
 
-          onDragStop={(e, d) => {
+    enableResizing={false}
 
-            const updated = [...fields];
+    size={{
+      width: "auto",
+      height: "auto",
+    }}
 
-            const centerX =
-              displaySize.width / 2 -
-              field.width / 2;
+    position={{
+      x: field.x,
+      y: field.y,
+    }}
 
-            if (
-              Math.abs(d.x - centerX) < 10
-            ) {
-              updated[index].x =
-                centerX;
-            } else {
-              updated[index].x = d.x;
-            }
+    onDragStop={(e, d) => {
 
-            updated[index].y = d.y;
+      const updated = [...fields];
 
-            setFields(updated);
-          }}
+      updated[index].x = d.x;
 
-          onResizeStop={(
-            e,
-            direction,
-            ref,
-            delta,
-            position
-          ) => {
+      updated[index].y = d.y;
 
-            const updated = [...fields];
+      setFields(updated);
+    }}
+  >
 
-            updated[index].width =
-              parseInt(ref.style.width);
+    <div
+      className="
+      group
+      relative
+      inline-block
+      px-2
+      py-1
+      rounded-lg
+      transition-all
+      duration-200
+      hover:bg-blue-500/10
+      hover:ring-2
+      hover:ring-blue-400/60
+      cursor-move
+      "
+    >
 
-            updated[index].height =
-              parseInt(ref.style.height);
+      {/* DRAG INDICATOR */}
+      <div
+        className="
+        absolute
+        -top-2
+        -right-2
+        w-3
+        h-3
+        rounded-full
+        bg-blue-500
+        opacity-0
+        group-hover:opacity-100
+        transition
+        shadow-[0_0_10px_rgba(59,130,246,0.8)]
+        "
+      />
 
-            updated[index].x =
-              position.x;
+      {/* TEXT */}
+      <div
+        className="
+        whitespace-nowrap
+        select-none
+        "
+        style={{
 
-            updated[index].y =
-              position.y;
+          fontSize:
+            `${field.fontSize}px`,
 
-            setFields(updated);
-          }}
-        >
+          color:
+            field.color,
 
-          <div
-            className="
-            w-full
-            h-full
-            flex
-            items-center
-            justify-center
-            border-2
-            border-dashed
-            border-blue-400
-            bg-blue-500/10
-            rounded-xl
-            backdrop-blur-sm
-            select-none
-            "
-            style={{
-              fontSize: field.fontSize,
+          fontFamily:
+            field.fontFamily,
 
-              color: field.color,
+          fontWeight:
+            field.bold
+              ? "bold"
+              : "normal",
 
-              fontFamily:
-                field.fontFamily,
+          fontStyle:
+            field.italic
+              ? "italic"
+              : "normal",
 
-              fontWeight:
-                field.bold
-                  ? "bold"
-                  : "normal",
+          lineHeight: 1,
 
-              fontStyle:
-                field.italic
-                  ? "italic"
-                  : "normal",
-            }}
-          >
-            {field.value}
-          </div>
+          padding: 0,
 
-        </Rnd>
+          margin: 0,
+        }}
+      >
 
-      ))}
+        {field.value}
+
+      </div>
+
+    </div>
+
+  </Rnd>
+
+))}
 
     </div>
   );
