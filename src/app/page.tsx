@@ -20,7 +20,7 @@ export default function HomePage() {
       width: 0,
       height: 0,
     });
-
+    const [loading, setLoading] =useState(false);
   const [fields, setFields] = useState([
     {
       id: 1,
@@ -99,7 +99,12 @@ export default function HomePage() {
   };
 
   const handleGenerate = async () => {
-    if (!certificate) return;
+
+  if (!certificate) return;
+
+  try {
+
+    setLoading(true);
 
     const formData = new FormData();
 
@@ -136,15 +141,29 @@ export default function HomePage() {
     const url =
       window.URL.createObjectURL(blob);
 
-    const a = document.createElement("a");
+    const a =
+      document.createElement("a");
 
     a.href = url;
 
-    a.download = "certificates.zip";
+    a.download =
+      "certificates.zip";
 
     a.click();
-  };
 
+  } catch (err) {
+
+    console.error(err);
+
+    alert(
+      "Failed to generate certificates"
+    );
+
+  } finally {
+
+    setLoading(false);
+  }
+};
   return (
     <main className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-black text-white">
 
@@ -261,24 +280,43 @@ backdrop-blur-2xl
       </button>
 
       {/* GENERATE BUTTON */}
-      <button
-        onClick={handleGenerate}
-        className="
-        px-6 md:px-8
-        py-3
-        rounded-2xl
-        bg-linear-to-r
-        from-cyan-500
-        to-blue-600
-        hover:scale-[1.03]
-        active:scale-[0.98]
-        transition-all duration-300
-        font-semibold
-        shadow-xl shadow-cyan-500/20
-        "
-      >
-        Generate
-      </button>
+    <button
+  onClick={handleGenerate}
+  disabled={loading}
+  className="
+  px-6 md:px-8
+  py-3
+  rounded-2xl
+  bg-linear-to-r
+  from-cyan-500
+  to-blue-600
+  transition-all duration-300
+  font-semibold
+  shadow-xl shadow-cyan-500/20
+  disabled:opacity-60
+  disabled:cursor-not-allowed
+  flex items-center gap-3
+  "
+>
+
+  {loading && (
+
+    <div className="
+    h-5 w-5
+    border-2
+    border-white/30
+    border-t-white
+    rounded-full
+    animate-spin
+    " />
+
+  )}
+
+  {loading
+    ? "Generating..."
+    : "Generate"}
+
+</button>
 
     </div>
 

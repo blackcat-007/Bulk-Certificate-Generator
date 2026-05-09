@@ -24,3 +24,34 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+@keyframes liquidFill {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.animate-liquidFill {
+  animation: liquidFill 2.5s ease-in-out forwards;
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(-25%);
+  }
+
+  50% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(25%);
+  }
+}
+
+.animate-wave {
+  animation: wave 1.8s infinite linear;
+}

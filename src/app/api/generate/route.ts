@@ -98,38 +98,70 @@ export async function POST(
         (field.y * scaleY) -
         (field.fontSize *
           scaleY);
+let selectedFont;
 
-      let font;
+if (field.fontFamily === "Courier") {
 
-      switch (
-        field.fontFamily
-      ) {
+  if (field.bold && field.italic) {
+    selectedFont =
+      StandardFonts.CourierBoldOblique;
 
-        case "Courier":
+  } else if (field.bold) {
+    selectedFont =
+      StandardFonts.CourierBold;
 
-          font =
-            await pdfDoc.embedFont(
-              StandardFonts.Courier
-            );
+  } else if (field.italic) {
+    selectedFont =
+      StandardFonts.CourierOblique;
 
-          break;
+  } else {
+    selectedFont =
+      StandardFonts.Courier;
+  }
 
-        case "TimesRoman":
+} else if (
+  field.fontFamily === "TimesRoman"
+) {
 
-          font =
-            await pdfDoc.embedFont(
-              StandardFonts.TimesRoman
-            );
+  if (field.bold && field.italic) {
+    selectedFont =
+      StandardFonts.TimesRomanBoldItalic;
 
-          break;
+  } else if (field.bold) {
+    selectedFont =
+      StandardFonts.TimesRomanBold;
 
-        default:
+  } else if (field.italic) {
+    selectedFont =
+      StandardFonts.TimesRomanItalic;
 
-          font =
-            await pdfDoc.embedFont(
-              StandardFonts.Helvetica
-            );
-      }
+  } else {
+    selectedFont =
+      StandardFonts.TimesRoman;
+  }
+
+} else {
+
+  if (field.bold && field.italic) {
+    selectedFont =
+      StandardFonts.HelveticaBoldOblique;
+
+  } else if (field.bold) {
+    selectedFont =
+      StandardFonts.HelveticaBold;
+
+  } else if (field.italic) {
+    selectedFont =
+      StandardFonts.HelveticaOblique;
+
+  } else {
+    selectedFont =
+      StandardFonts.Helvetica;
+  }
+}
+
+const font =
+  await pdfDoc.embedFont(selectedFont);
 
       const hex =
         field.color.replace(
